@@ -29,17 +29,25 @@ app.get('/proxy', (req, res)=>{
     const fs = require('fs')
     const imgUrl = decodeURIComponent(req.query.url)
     console.log('proxy image from',imgUrl)
-    // res.status(200).type('png').send()
     res.setTimeout(10 * 1000,() => {
         fs.createReadStream(errorPng).pipe(res.status(200).type('png'))
     })
-
     download(imgUrl)
-        .pipe(res.status(200).type('png'))
-        .on('error', ()=>{
-            console.log('download failed')
+        .then((e)=>{
+            res.status(200).type('png').send(e)
+        })
+        .catch(e=>{
+            console.log('download failed',e)
             fs.createReadStream(errorPng).pipe(res.status(200).type('png'))
         })
+        // .pipe(res.status(200).type('png'))
+        // .on('end', (e)=>{
+        //     console.log('download end',e)
+        // })
+        // .on('error', ()=>{
+        //     console.log('download failed')
+        //     fs.createReadStream(errorPng).pipe(res.status(200).type('png'))
+        // })
 
 })
 // catch 404
