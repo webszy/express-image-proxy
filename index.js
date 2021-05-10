@@ -31,14 +31,14 @@ app.get('/proxy', (req, res)=>{
     console.log('proxy image from',imgUrl)
     // res.status(200).type('png').send()
     res.setTimeout(10 * 1000,() => {
-        res.status(200).type('png').send(fs.createReadStream(errorPng))
+        fs.createReadStream(errorPng).pipe(res.status(200).type('png'))
     })
 
     download(imgUrl)
         .pipe(res.status(200).type('png'))
         .on('error', ()=>{
             console.log('download failed')
-            res.status(200).type('png').send(fs.createReadStream(errorPng))
+            fs.createReadStream(errorPng).pipe(res.status(200).type('png'))
         })
 
 })
