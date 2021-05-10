@@ -1,1 +1,0 @@
-# express-image-proxy
